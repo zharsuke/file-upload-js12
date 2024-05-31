@@ -76,4 +76,25 @@ class FileUploadController extends Controller
         // echo "Proses upload berhasil, file berada di: $path";
         // echo $request->berkas->getClientOriginalName()."lolos validasi";
     }
+
+    public function fileUploadAssignment(){
+        return view('file-upload-assignment');
+    }
+
+    public function prosesfileUploadAssignment(Request $request){
+        $request->validate([
+            'nama_berkas' => 'required|string',
+            'berkas' => 'required|file|image|max:500',
+        ]);
+        $text = $request->berkas->getClientOriginalExtension();
+        $textname = $request->nama_berkas.'.'.$text;
+
+        $path = $request->berkas->move('gambar',$textname);
+        $path = str_replace("\\","//",$path);
+
+        $pathBaru = asset('gambar/'.$textname);
+        echo "Gambar berhasil di upload ke <a href='$pathBaru'>$textname</a>";
+        echo "<br>";
+        echo "<img src='$pathBaru' alt='$textname' style='max-width: 500px'; height: auto;'>";
+    }
 }
